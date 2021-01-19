@@ -17,12 +17,11 @@ class Mouse;
 
 class Window {
 private:
+	friend class Application;
 	HINSTANCE hInst;
 	HWND hwnd;
 	const wchar_t* pWindowName;
 	POINTS ptsWidth;
-	std::unique_ptr<Graphics> ptrGfx;
-	std::unique_ptr<UIManager> ptrUI;
 
 	static LRESULT CALLBACK MsgSetup(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK MsgRoutineHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -59,15 +58,12 @@ public:
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
-	void update();
 
 	std::unique_ptr<Mouse> ptrMouse;
 
 	static std::optional<int> ProcessMessages();
-	Graphics& gfx() const noexcept;
-	UIManager& ui() const noexcept;
+
 	const HINSTANCE& inst() const noexcept;
-	void process_input();
 };
 
 #endif

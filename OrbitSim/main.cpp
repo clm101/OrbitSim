@@ -23,6 +23,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		MessageBoxA(nullptr, ossCatchAll.str().c_str(), "Unprocessed exception", MB_ICONEXCLAMATION);
 	}
 
-	_CrtDumpMemoryLeaks();
+	//_CrtDumpMemoryLeaks();
 	return nRet;
 }

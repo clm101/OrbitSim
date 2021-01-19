@@ -8,7 +8,7 @@
 /**********************************/
 
 std::string Window::WinExceptionBase::getWinErrorString(HRESULT hr) noexcept {
-	char* pMsg;
+	char* pMsg = nullptr;
 
 	if (!FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS
 		, nullptr, hr, LocaleNameToLCID(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_ALLOW_NEUTRAL_NAMES),
@@ -108,12 +108,11 @@ Window::Window(const wchar_t* pWindowName, short sWidth, short sHeight)
 	}
 	ShowWindow(hwnd, SW_SHOW);
 
-	ptrGfx = std::make_unique<Graphics>(hwnd);
 	ptrMouse = std::make_unique<Mouse>(*this);
 	WINDOWINFO wiInfo{};
 	wiInfo.cbSize = sizeof(WINDOWINFO);
 	GetWindowInfo(hwnd, &wiInfo);
-	ptrUI = std::make_unique<UIManager>(UI::Rect{ 0, 0, (std::int32_t)(wiInfo.rcClient.right - wiInfo.rcClient.left), (std::int32_t)(wiInfo.rcClient.bottom - wiInfo.rcClient.top) });
+	//ptrUI = std::make_unique<UIManager>(UI::Rect{ 0, 0, (std::int32_t)(wiInfo.rcClient.right - wiInfo.rcClient.left), (std::int32_t)(wiInfo.rcClient.bottom - wiInfo.rcClient.top) });
 }
 
 // Destructor
@@ -203,14 +202,6 @@ std::optional<int> Window::ProcessMessages() {
 	}
 
 	return {};
-}
-
-Graphics& Window::gfx() const noexcept {
-	return *ptrGfx;
-}
-
-UIManager& Window::ui() const noexcept {
-	return *ptrUI;
 }
 
 const HINSTANCE& Window::inst() const noexcept {

@@ -167,84 +167,14 @@ void Graphics::ClearBuffer(const double fTime) {
 	ptrDeviceContext->ClearRenderTargetView(ptrTarget.Get(), color);
 }
 
-void Graphics::BeginFrame(UIManager& ui) {
+void Graphics::BeginFrame() {
 	//ClearBuffer(fTime);
 	static HRESULT hr;
 
 	ptrD2DDeviceContext->BeginDraw();
-	ui.draw(ptrD2DDeviceContext);
+	
 	CLM_EXCEPT_GFX_HR_INFO(ptrD2DDeviceContext->EndDraw());
 
-	//struct Vertex {
-	//	float x;
-	//	float y;
-	//};
-
-	//// Triangle vertices
-	//Vertex v[] = { {-1.0f, 1.0f}, {1.0f, -1.0f}, {-1.0f, -1.0f}, {-1.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, -1.0f} };
-
-	//ptrDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	//// Load vertex information
-	//D3D11_BUFFER_DESC bdVertex{};
-	//bdVertex.ByteWidth = (UINT)(std::size(v) * sizeof(Vertex));
-	//bdVertex.Usage = D3D11_USAGE_DEFAULT;
-	//bdVertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//bdVertex.CPUAccessFlags = 0;
-	//bdVertex.MiscFlags = 0;
-	//bdVertex.StructureByteStride = sizeof(Vertex);
-	//D3D11_SUBRESOURCE_DATA sdVertex{};
-	//sdVertex.pSysMem = v;
-	//ptrDevice->CreateBuffer(&bdVertex, &sdVertex, &ptrVBuffer);
-	//const UINT nStride = sizeof(Vertex);
-	//const UINT nOffset = 0u;
-	//ptrDeviceContext->IASetVertexBuffers(0u, 1u, ptrVBuffer.GetAddressOf(), &nStride, &nOffset);
-
-	//D3D11_INPUT_ELEMENT_DESC ied{};
-	//ied.SemanticName = "Position";
-	//ied.SemanticIndex = 0u;
-	//ied.AlignedByteOffset = 0u;
-	//ied.Format = DXGI_FORMAT_R32G32_FLOAT;
-	//ied.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	//ied.InstanceDataStepRate = 0u;
-	//ptrDevice->CreateInputLayout(&ied, 1u, ptrVSBlob->GetBufferPointer(), ptrVSBlob->GetBufferSize(), &ptrInputLayout);
-	//ptrDeviceContext->IASetInputLayout(ptrInputLayout.Get());
-
-	//struct PSConstBufferData {
-	//	float width;
-	//	float height;
-	//	float fTime;
-	//	float filler;
-	//};
-	//PSConstBufferData dim{ 1000.0f, 1000.0f, fTime, 0.0f };
-
-	//D3D11_BUFFER_DESC bdPixel{};
-	//bdPixel.ByteWidth = (UINT)sizeof(PSConstBufferData);
-	//bdPixel.Usage = D3D11_USAGE_DEFAULT;
-	//bdPixel.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//bdPixel.CPUAccessFlags = 0;
-	//bdPixel.MiscFlags = 0;
-	//bdPixel.StructureByteStride = sizeof(PSConstBufferData);
-	//D3D11_SUBRESOURCE_DATA sdPixel{};
-	//sdPixel.pSysMem = &dim;
-	//ptrDevice->CreateBuffer(&bdPixel, &sdPixel, &ptrPSBuffer);
-	//CLM_EXCEPT_GFX_INFO_ONLY(ptrDeviceContext->PSSetConstantBuffers(0u, 1u, ptrPSBuffer.GetAddressOf()));
-
-	//// Set up viewport
-	//D3D11_VIEWPORT viewport{};
-	//viewport.TopLeftX = 0;
-	//viewport.TopLeftY = 0;
-	//viewport.Width = 1000;
-	//viewport.Height = 1000;
-	//viewport.MinDepth = 0;
-	//viewport.MaxDepth = 1;
-
-	//CLM_EXCEPT_GFX_INFO_ONLY(ptrDeviceContext->RSSetViewports(1u, &viewport));
-
-	//// Load pixel shader
-
-	//CLM_EXCEPT_GFX_INFO_ONLY(ptrDeviceContext->OMSetRenderTargets(1, ptrTarget.GetAddressOf(), nullptr));
-	//CLM_EXCEPT_GFX_INFO_ONLY(ptrDeviceContext->Draw((UINT)std::size(v), 0u));
 	return;
 }
 void Graphics::EndFrame() {

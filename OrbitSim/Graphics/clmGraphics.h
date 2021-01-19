@@ -74,7 +74,7 @@ public:
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 
-	void BeginFrame(UIManager&);
+	void BeginFrame();
 	void EndFrame();
 	void ClearBuffer(const double);
 };
