@@ -159,7 +159,7 @@ Graphics::~Graphics() {
 	SafeRelease(ptrD2DDevice);
 }
 
-void Graphics::ClearBuffer(const double fTime) {
+void Graphics::ClearBuffer(const double fTime = 0.0f) {
 	/*float fRed = 0.5 * (float)(1 + std::sin(2 * std::numbers::pi * 1.5 * fTime));
 	float fGreen = 0.5 * (float)(1 + std::sin(2 * std::numbers::pi * 1.0 * fTime));
 	float fBlue = 0.5 * (float)(1 + std::sin(2 * std::numbers::pi * 0.1 * fTime));*/
@@ -168,17 +168,41 @@ void Graphics::ClearBuffer(const double fTime) {
 }
 
 void Graphics::BeginFrame() {
-	//ClearBuffer(fTime);
+	ClearBuffer();
 	static HRESULT hr;
 
 	ptrD2DDeviceContext->BeginDraw();
-	
-	CLM_EXCEPT_GFX_HR_INFO(ptrD2DDeviceContext->EndDraw());
 
 	return;
 }
 void Graphics::EndFrame() {
-	HRESULT hr;
+	static HRESULT hr;
+	CLM_EXCEPT_GFX_HR_INFO(ptrD2DDeviceContext->EndDraw());
 	CLM_EXCEPT_GFX_HR_INFO(ptrSwapChain->Present(1u, 0));
+	return;
+}
+
+
+void Graphics::draw_circle(const float x, const float y, const float r) {
+	ID2D1SolidColorBrush* ptrBrush = nullptr;
+	ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &ptrBrush);
+
+	D2D1_ELLIPSE circle = D2D1::Ellipse({ x, y }, r, r);
+
+	ptrD2DDeviceContext->FillEllipse(circle, ptrBrush);
+
+	ptrBrush->Release();
+	return;
+}
+
+void Graphics::draw_circle(const GFX::Circle c) {
+	ID2D1SolidColorBrush* ptrBrush = nullptr;
+	ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &ptrBrush);
+
+	D2D1_ELLIPSE circle = D2D1::Ellipse({ c.x, c.y }, c.r, c.r);
+
+	ptrD2DDeviceContext->FillEllipse(circle, ptrBrush);
+
+	ptrBrush->Release();
 	return;
 }

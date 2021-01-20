@@ -19,6 +19,13 @@
 
 namespace mswrl = Microsoft::WRL;
 
+namespace GFX {
+	struct Circle {
+		float x, y;
+		float r;
+	};
+}
+
 class Graphics {
 private:
 	// Set up device
@@ -77,6 +84,9 @@ public:
 	void BeginFrame();
 	void EndFrame();
 	void ClearBuffer(const double);
+
+	void draw_circle(const float, const float, const float);
+	void draw_circle(const GFX::Circle);
 };
 
 template<class T>

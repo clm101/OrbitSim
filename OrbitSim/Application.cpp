@@ -6,6 +6,8 @@ Application::Application(const wchar_t* wWindowName, short sWidth, short sHeight
 	ptrWnd = std::make_unique<Window>(wWindowName, sWidth, sHeight);
 	ptrGfx = std::make_unique<Graphics>(ptrWnd->hwnd);
 	tmrTimer.set();
+
+	c = { 640.0f, 360.0f, 10.0f };
 }
 
 int Application::Start() {
@@ -31,8 +33,12 @@ void Application::process_input() {
 	}
 }
 
-void Application::DoFrame(const float fTime) const {
+void Application::DoFrame(const float fTime) {
 	ptrGfx->BeginFrame();
+
+	c.x += 0.1f;
+
+	ptrGfx->draw_circle(c);
 
 	ptrGfx->EndFrame();
 }

@@ -12,6 +12,8 @@ private:
 	std::unique_ptr<Window> ptrWnd;
 	std::unique_ptr<Graphics> ptrGfx;
 	clmTimer tmrTimer;
+
+	GFX::Circle c;
 public:
 	Application(const wchar_t*, short, short);
 	Application(const Application&) = delete;
@@ -19,7 +21,7 @@ public:
 
 	int Start();
 	void process_input();
-	void DoFrame(const float) const;
+	void DoFrame(const float);
 };
 
 #endif
