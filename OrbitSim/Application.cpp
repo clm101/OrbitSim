@@ -9,7 +9,6 @@ Application::Application(const wchar_t* wWindowName, short sWidth, short sHeight
 }
 
 int Application::Start() {
-	using uia = UI::Axis;
 	while (true) {
 		if (const auto ret = Window::ProcessMessages()) {
 			return *ret;

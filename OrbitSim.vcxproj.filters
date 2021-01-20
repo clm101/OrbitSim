@@ -27,12 +27,6 @@
     <ClInclude Include="OrbitSim\DebugDefines\WinDebugDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OrbitSim\Graphics\GUI\UIBaseElem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OrbitSim\Graphics\GUI\UIManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OrbitSim\Graphics\clmGraphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -68,18 +62,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OrbitSim\Graphics\GUI\Panel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OrbitSim\Graphics\GUI\UIBaseElem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OrbitSim\Graphics\GUI\UIManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OrbitSim\Graphics\GUI\Zone.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OrbitSim\Graphics\clmGraphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

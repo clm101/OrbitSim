@@ -14,7 +14,6 @@
 #include "DxgiInfoManager.h"
 #include "../ExceptionBase.h"
 #include "../DebugDefines/GraphicsDebugDefines.h"
-#include "GUI/UIManager.h"
 #include "../DebugDefines/MemoryDebug.h"
 
 namespace mswrl = Microsoft::WRL;
