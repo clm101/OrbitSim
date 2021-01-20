@@ -30,6 +30,7 @@
     <ClInclude Include="OrbitSim\Graphics\clmGraphics.h" />
     <ClInclude Include="OrbitSim\Graphics\DxgiInfoManager.h" />
     <ClInclude Include="OrbitSim\OrbitSim.h" />
+    <ClInclude Include="OrbitSim\VectorMath.h" />
     <ClInclude Include="OrbitSim\Windows\clmWinStuff.h" />
     <ClInclude Include="OrbitSim\Windows\Mouse.h" />
     <ClInclude Include="OrbitSim\Windows\WindowsInclude.h" />

@@ -15,6 +15,7 @@
 #include "../ExceptionBase.h"
 #include "../DebugDefines/GraphicsDebugDefines.h"
 #include "../DebugDefines/MemoryDebug.h"
+#include "../VectorMath.h"
 
 namespace mswrl = Microsoft::WRL;
 
@@ -86,6 +87,11 @@ public:
 
 	void draw_circle(const float, const float, const float);
 	void draw_circle(const GFX::Circle);
+
+	void draw_square(const float, const float, const float);
+	void draw_square(const GFX::Circle);
+
+	void draw_circle_with_grid(const GFX::Circle, size_t);
 };
 
 template<class T>

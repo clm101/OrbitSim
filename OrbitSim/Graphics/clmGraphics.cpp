@@ -185,7 +185,10 @@ void Graphics::EndFrame() {
 
 void Graphics::draw_circle(const float x, const float y, const float r) {
 	ID2D1SolidColorBrush* ptrBrush = nullptr;
-	ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &ptrBrush);
+	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &ptrBrush);
+	if (ptrBrush == nullptr) {
+		CLM_EXCEPT_GFX_HR_INFO(hr);
+	}
 
 	D2D1_ELLIPSE circle = D2D1::Ellipse({ x, y }, r, r);
 
@@ -197,12 +200,64 @@ void Graphics::draw_circle(const float x, const float y, const float r) {
 
 void Graphics::draw_circle(const GFX::Circle c) {
 	ID2D1SolidColorBrush* ptrBrush = nullptr;
-	ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &ptrBrush);
+	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &ptrBrush);
+	if (ptrBrush == nullptr) {
+		CLM_EXCEPT_GFX_HR_INFO(hr);
+	}
 
 	D2D1_ELLIPSE circle = D2D1::Ellipse({ c.x, c.y }, c.r, c.r);
 
 	ptrD2DDeviceContext->FillEllipse(circle, ptrBrush);
 
 	ptrBrush->Release();
+	return;
+}
+
+void Graphics::draw_square(const float x, const float y, const float w) {
+	ID2D1SolidColorBrush* ptrBrush = nullptr;
+	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 1.0f), &ptrBrush);
+	if (ptrBrush == nullptr) {
+		CLM_EXCEPT_GFX_HR_INFO(hr);
+	}
+
+	const float fHalfW = w / 2;
+	D2D1_RECT_F sq = D2D1::RectF(x - fHalfW, y + fHalfW, x + fHalfW, y - fHalfW);
+
+	ptrD2DDeviceContext->DrawRectangle(sq, ptrBrush, 2.0f);
+
+	ptrBrush->Release();
+	return;
+}
+
+void Graphics::draw_square(GFX::Circle c) {
+	draw_square(c.x, c.y, 2 * c.r);
+}
+
+void Graphics::draw_circle_with_grid(const GFX::Circle c, size_t nRes) {
+	draw_circle(c);
+
+	ID2D1SolidColorBrush* ptrBrushGreen = nullptr;
+	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 0.5f), &ptrBrushGreen);
+	if (ptrBrushGreen == nullptr) {
+		CLM_EXCEPT_GFX_HR_INFO(hr);
+	}
+	const float w = 2 * c.r / nRes;
+	const float rsq = c.r * c.r;
+	const Vec2D vStart = { c.x - c.r + w/2,c.y - c.r + w/2};
+	std::vector<Vec2D<float>> grid(static_cast<size_t>(nRes) * static_cast<size_t>(nRes));
+	for (size_t i = 0; i < nRes; i++) {
+		for (size_t j = 0; j < nRes; j++) {
+			const Vec2D<float> v = { vStart.get_x() + i * w - c.x, vStart.get_y() + j * w - c.y };
+			if (Vec2D<float>::magsq(v) < rsq) {
+				grid[i * nRes + j] = { v.get_x() + c.x, v.get_y() + c.y };
+			}
+		}
+	}
+	
+	for (const auto v : grid) {
+		draw_square(v.get_x(), v.get_y(), w);
+	}
+
+	ptrBrushGreen->Release();
 	return;
 }

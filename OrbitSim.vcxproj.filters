@@ -60,6 +60,9 @@
     <ClInclude Include="OrbitSim\OrbitSim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OrbitSim\VectorMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrbitSim\Graphics\clmGraphics.cpp">
