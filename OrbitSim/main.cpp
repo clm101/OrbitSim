@@ -1,12 +1,12 @@
 #include "Windows/WindowsInclude.h"
 #include <d3d11.h>
 #include "Windows/clmWinStuff.h"
-#include "Application.h"
+#include "OrbitSim.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) {
 	int nRet{ 0 };
 	try {
-		Application app(L"Test window", 1280, 720);
+		OrbitSim app(L"Test window", 1280, 720);
 		nRet = app.Start();
 	}
 	catch (ExceptionBase& e) {

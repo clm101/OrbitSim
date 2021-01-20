@@ -5,7 +5,7 @@
 #include <queue>
 #include <cstdint>
 #include <optional>
-//#include "clmWinStuff.h"
+
 class Window;
 
 class Mouse {

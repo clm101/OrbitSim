@@ -7,12 +7,7 @@
 #include <optional>
 #include "../ExceptionBase.h"
 #include "WMMap.h"
-#include "../Graphics/clmGraphics.h"
-#include "../Graphics/GUI/UIManager.h"
 
-//#ifndef MOUSE_H
-//#include "Mouse.h"
-//#endif
 class Mouse;
 
 class Window {

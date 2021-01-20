@@ -31,6 +31,7 @@
     <ClInclude Include="OrbitSim\Graphics\DxgiInfoManager.h" />
     <ClInclude Include="OrbitSim\Graphics\GUI\UIBaseElem.h" />
     <ClInclude Include="OrbitSim\Graphics\GUI\UIManager.h" />
+    <ClInclude Include="OrbitSim\OrbitSim.h" />
     <ClInclude Include="OrbitSim\Windows\clmWinStuff.h" />
     <ClInclude Include="OrbitSim\Windows\Mouse.h" />
     <ClInclude Include="OrbitSim\Windows\WindowsInclude.h" />
@@ -48,6 +49,7 @@
     <ClCompile Include="OrbitSim\Graphics\GUI\UIManager.cpp" />
     <ClCompile Include="OrbitSim\Graphics\GUI\Zone.cpp" />
     <ClCompile Include="OrbitSim\main.cpp" />
+    <ClCompile Include="OrbitSim\OrbitSim.cpp" />
     <ClCompile Include="OrbitSim\Windows\Mouse.cpp" />
     <ClCompile Include="OrbitSim\Windows\WinStuff.cpp" />
     <ClCompile Include="OrbitSim\Windows\WMMap.cpp" />
@@ -127,6 +129,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,6 +146,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +163,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -175,6 +180,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
