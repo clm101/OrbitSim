@@ -20,6 +20,16 @@ public:
 		return { this->x - rhs.x, this->y - rhs.y };
 	}
 
+	const Vec2D<T>& operator+=(Vec2D<T> rhs) {
+		this->x += rhs.x;
+		this->y += rhs.y;
+		return *this;
+	}
+	const Vec2D<T>& operator-=(Vec2D<T> rhs) {
+		this->x -= rhs.x;
+		this->y -= rhs.y;
+		return *this;
+	}
 	const Vec2D<T>& operator/=(T f) {
 		this->x /= f;
 		this->y /= f;

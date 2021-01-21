@@ -92,6 +92,8 @@ public:
 	void draw_square(const GFX::Circle);
 
 	void draw_circle_with_grid(const GFX::Circle, size_t);
+
+	void draw_line(float, float, float, float);
 };
 
 template<class T>

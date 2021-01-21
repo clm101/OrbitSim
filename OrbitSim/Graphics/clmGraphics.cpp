@@ -261,3 +261,16 @@ void Graphics::draw_circle_with_grid(const GFX::Circle c, size_t nRes) {
 	ptrBrushGreen->Release();
 	return;
 }
+
+void Graphics::draw_line(float x1, float y1, float x2, float y2) {
+	ID2D1SolidColorBrush* ptrBrush = nullptr;
+	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &ptrBrush);
+	if (ptrBrush == nullptr) {
+		CLM_EXCEPT_GFX_HR_INFO(hr);
+	}
+
+	ptrD2DDeviceContext->DrawLine({ x1, y1 }, { x2,y2 }, ptrBrush, 1.0f);
+
+	ptrBrush->Release();
+	return;
+}

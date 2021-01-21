@@ -20,7 +20,7 @@ public:
 		v2Vel = v2Vel_in;
 		fRadius = fRadius_in;
 	}
-		
+
 	~Body() {
 		fMass = 0.0f;
 		v2Pos = {};
@@ -29,11 +29,13 @@ public:
 	}
 	Body(Body&) = default;
 	Body(Body&&) = default;
-	Body& operator=(Body&&) = default;
+	Body& operator=(Body&&) noexcept = default;
 	Body& operator=(Body&) = default;
 
-	const Vec2D<T>& get_pos() { return v2Pos; }
-	const Vec2D<T>& get_vel() { return v2Vel; }
+	const Vec2D<T>& get_pos() const { return v2Pos; }
+	const Vec2D<T>& get_vel() const { return v2Vel; }
+	float get_radius() const { return fRadius; }
+
 	T get_mass() {
 		return fMass;
 	}
