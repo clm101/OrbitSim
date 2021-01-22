@@ -1,52 +1,82 @@
 #include "OrbitSim.h"
 #include <numbers>
+#include <sstream>
 
 OrbitSim::OrbitSim(const wchar_t* wWindowName, short sWidth, short sHeight)
 	:
 	Application(wWindowName, sWidth, sHeight) {
-	b1 = { 3000.0f, {640.0f, 360.0f}, {0.0f, 0.0f}, 50.0f };
-	b2 = { 10.0f, {520.0f, 360.0f}, {0.0f, 6.0f}, 10.0f };
+	main = { 3017.58f, Vec2D<float>{0.0f, 0.0f}, Vec2D<float>{0.0f, 0.0f}, 50.0f };
+	b2 = { 10.0f, Vec2D<float>{-100.0f, 0.0f}, Vec2D<float>{0.0f, 8.0f}, 10.0f };
+	b3 = { 10.0f, Vec2D<float>{-100.0f, 0.0f}, Vec2D<float>{0.0f, 8.0f}, 10.0f };
+
+	// Generate grid, the vector contains the position of the center of each cell relative to the center of the body
+	const auto generate_grid = [](const Body<float>& b, const size_t nRes) -> std::vector<Vec2D<float>> {
+		std::vector<Vec2D<float>> vGrid;
+		vGrid.reserve(nRes * nRes);
+		const float fCellWidth = 2.0f * b.get_radius() / static_cast<float>(nRes);
+		const float fRadiusSq = b.get_radius() * b.get_radius();
+
+		// The cells will assume to begin in the second quadrant of the body(assumed to be a circle)
+		const Vec2D<float> vStart{ -b.get_radius() + fCellWidth / 2.0f, b.get_radius() - fCellWidth / 2.0f };
+		for (size_t i = 0; i < nRes; i++) {
+			for (size_t j = 0; j < nRes; j++) {
+				Vec2D<float> v = vStart + Vec2D<float>{ static_cast<float>(j)* fCellWidth, -1.0f * static_cast<float>(i) * fCellWidth };
+				if (Vec2D<float>::magsq(v) < fRadiusSq) {
+					vGrid.push_back(v);
+				}
+			}
+		}
+		return std::move(vGrid);
+	};
+
+	vGrid = generate_grid(main, nRes);
+	vGrid.shrink_to_fit();
 }
 
 void OrbitSim::run(const float fTime) {
-	constexpr float G = 2.0f;
-	constexpr float t = 0.2f;
-	constexpr size_t nRes = 4u;
+	constexpr float t = 0.1f;
 	
-	/*const float w = 2 * b1.get_radius() / nRes;
-	const Vec2D<float>& b1Center = b1.get_pos();
-	const float b1_x = b1Center.get_x();
-	const float b1_y = b1Center.get_y();
-	const float rsq = b1.get_radius() * b1.get_radius();
-	const float fDensity = b1.get_mass() / (std::numbers::pi * rsq);
-	
-	std::vector<Vec2D<float>> grid(static_cast<size_t>(nRes) * static_cast<size_t>(nRes));
-	auto gridIter = grid.begin();
-	size_t nCount = 0;
-	Vec2D<float> vStart = { w - b1.get_radius(), w - b1.get_radius() };
-	for (size_t i = 0; i < nRes; i++) {
-		for (size_t j = 0; j < nRes; j++) {
-			const Vec2D<float> v = vStart + Vec2D<float>{ i * w, j * w};
-			if (Vec2D<float>::magsq(v) < rsq) {
-				*gridIter = v;
-				gridIter++;
-				nCount++;
-			}
+	// Calculate acceleration on b1 from b2
+	Vec2D<float> vPos{};
+	const auto calculate_acceleration = [&](const Body<float>& satellite, const Body<float>& body, const std::vector<Vec2D<float>>& vGrid, const size_t nGridRes) -> Vec2D<float> {
+		constexpr float G = 2.0f;
+		const float fCellWidth = 2.0f * body.get_radius() / static_cast<float>(nGridRes);
+		const float fDensity = body.get_mass() / (static_cast<float>(std::numbers::pi) * body.get_radius() * body.get_radius());
+		Vec2D<> v2Acceleration{};
+
+		float fMassSum = 0.0f;
+		for (const auto& v : vGrid) {
+			Vec2D<> v2SatToB_unit = v - satellite.get_pos();
+			float fSatToB_sq = Vec2D<>::magsq(v2SatToB_unit);
+			v2SatToB_unit /= sqrt(fSatToB_sq);
+			vPos += v2SatToB_unit;
+			fMassSum += fCellWidth * fCellWidth * fDensity;
+
+			v2Acceleration += (G * fDensity * fCellWidth * fCellWidth * v2SatToB_unit / fSatToB_sq);
 		}
-	}
+		std::wostringstream oss;
+		oss << L"\nCalculated mass of grid: " << fMassSum << L'\n';
+		OutputDebugStringW(oss.str().c_str());
+		return std::move(v2Acceleration);
+	};
+	Vec2D<> v2Acceleration = calculate_acceleration(b3, main, vGrid, nRes);
+	vPos /= sqrt(Vec2D<>::magsq(vPos));
+	b3.set_vel(b3.get_vel() + t * v2Acceleration);
+	b3.set_pos(b3.get_pos() + t * b3.get_vel());
 
-	Vec2D<float> v2acc{};
-	Vec2D<float> b2Tob1 = b1.get_pos() - b2.get_pos();
-	for (auto v = grid.begin(); v != (grid.begin() + nCount); v++) {
-		const Vec2D<float> rUnit = (*v + b2Tob1) / sqrt(Vec2D<float>::magsq(*v + b2Tob1));
-		v2acc += (G * fDensity * w * w * rUnit / Vec2D<float>::magsq(*v + b2Tob1));
-	}*/
-
-	Vec2D r2_1 = b1.get_pos() - b2.get_pos();
+	
+	// Analytical Result
+	Vec2D r2_1 = main.get_pos() - b2.get_pos();
 	float rsq = Vec2D<float>::magsq(r2_1);
 	r2_1 /= sqrt(rsq);
 
-	Vec2D v2acc = G * b1.get_mass() * r2_1 / rsq;
+	constexpr float G = 2.0f;
+	Vec2D v2acc = G * main.get_mass() * r2_1 / rsq;
+
+	std::wostringstream oss;
+	oss << L"\nNumerical acceleration: " << v2Acceleration << L'\n';
+	oss << L"Analytical acceleration: " << v2acc << L'\n';
+	OutputDebugStringW(oss.str().c_str());
 
 	b2.set_vel(b2.get_vel() + t * v2acc);
 	b2.set_pos(b2.get_pos() + t * b2.get_vel());
@@ -58,8 +88,9 @@ void OrbitSim::run(const float fTime) {
 	ptrGfx->draw_square(b2);*/
 
 	ptrGfx->draw_circle(b2);
+	ptrGfx->draw_circle(b3, GFX::Color::Red);
 	//ptrGfx->draw_circle(b1);
-	ptrGfx->draw_circle_with_grid(b1, nRes);
+	ptrGfx->draw_circle_with_grid(main, vGrid, 2.0f * main.get_radius() / static_cast<float>(nRes));
 	//b2Tob1 = sqrt(Vec2D<float>::magsq(b1.get_pos() - b2.get_pos())) * v2acc / sqrt(Vec2D<float>::magsq(v2acc));
 	//ptrGfx->draw_line(b2Tob1.get_x(), b2Tob1.get_y(), b2.get_pos().get_x(), b2.get_pos().get_y());
 	/*for (auto v = grid.begin(); v != (grid.begin() + nCount); v++) {

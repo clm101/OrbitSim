@@ -1,3 +1,5 @@
+#include <sstream>
+
 #ifndef VECTORMATH_H
 #define VECTORMATH_H
 
@@ -44,6 +46,10 @@ public:
 	}
 	const Vec2D<T> operator/(T f) const {
 		return { this->x / f, this->y / f };
+	}
+
+	friend std::wostream& operator<<(std::wostream& oss, Vec2D<T> v) {
+		return (oss << L"<" << v.get_x() << L", " << v.get_y() << L">");
 	}
 
 	static T dot(Vec2D<T> v1, Vec2D<T> v2) {

@@ -24,6 +24,13 @@ namespace GFX {
 		float x, y;
 		float r;
 	};
+
+	enum class Color {
+		White,
+		Red,
+		Green,
+		Blue
+	};
 }
 
 class Graphics {
@@ -57,6 +64,22 @@ private:
 	mswrl::ComPtr<ID3D11Buffer> ptrVBuffer;
 	mswrl::ComPtr<ID3D11InputLayout> ptrInputLayout;
 	DB_INFO_MANAGER_DECL();
+
+	class ScreenPoint;
+	ScreenPoint conv_points(const float, const float) noexcept;
+
+	class ScreenPoint {
+		friend ScreenPoint Graphics::conv_points(const float, const float) noexcept;
+		float x, y;
+		ScreenPoint(float x_in, float y_in) : x(x_in), y(y_in) {}
+	public:
+		float get_x() const { return x; }
+		float get_y() const { return y; }
+	};
+
+	D2D1::ColorF get_color(const GFX::Color) const noexcept;
+	void draw_circle_impl(const ScreenPoint, const float, const GFX::Color = GFX::Color::White);
+	void draw_square_impl(const ScreenPoint, const float, const GFX::Color = GFX::Color::Green);
 public:
 	class GFXExceptionBase : public ExceptionBase {
 		using ExceptionBase::ExceptionBase;
@@ -85,15 +108,19 @@ public:
 	void EndFrame();
 	void ClearBuffer(const double);
 
-	void draw_circle(const float, const float, const float);
-	void draw_circle(const GFX::Circle);
+	//void conv_points(float&, float&) noexcept;
 
-	void draw_square(const float, const float, const float);
-	void draw_square(const GFX::Circle);
+	
+	void draw_circle(const GFX::Circle, const GFX::Color = GFX::Color::White);
 
-	void draw_circle_with_grid(const GFX::Circle, size_t);
+	void draw_square(const float, const float, const float, const GFX::Color = GFX::Color::Green);
+	void draw_bounding_square(const GFX::Circle, const GFX::Color = GFX::Color::Green);
 
-	void draw_line(float, float, float, float);
+	void draw_grid(const std::vector<Vec2D<float>>&, const float, const GFX::Color = GFX::Color::Green);
+
+	void draw_circle_with_grid(const GFX::Circle, const std::vector<Vec2D<float>>&, const float, const GFX::Color = GFX::Color::White, const GFX::Color = GFX::Color::Green);
+
+	void draw_line(float, float, float, float, const GFX::Color = GFX::Color::Red);
 };
 
 template<class T>

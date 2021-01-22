@@ -27,18 +27,15 @@ public:
 		v2Vel = {};
 		fRadius = 0.0f;
 	}
-	Body(Body&) = default;
+	Body(const Body&) = default;
 	Body(Body&&) = default;
 	Body& operator=(Body&&) noexcept = default;
-	Body& operator=(Body&) = default;
+	Body& operator=(const Body&) = default;
 
 	const Vec2D<T>& get_pos() const { return v2Pos; }
 	const Vec2D<T>& get_vel() const { return v2Vel; }
-	float get_radius() const { return fRadius; }
-
-	T get_mass() {
-		return fMass;
-	}
+	T get_radius() const { return fRadius; }
+	T get_mass() const { return fMass; }
 
 	void set_pos(Vec2D<T> v2Pos_in) {
 		v2Pos = v2Pos_in;
@@ -54,8 +51,12 @@ public:
 
 class OrbitSim : public Application {
 private:
-	Body<float> b1;
+	Body<float> main;
 	Body<float> b2;
+	Body<float> b3;
+
+	const size_t nRes = 10u;
+	std::vector<Vec2D<float>> vGrid;
 public:
 	OrbitSim(const wchar_t*, short, short);
 	OrbitSim(const Application&) = delete;

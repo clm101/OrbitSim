@@ -182,15 +182,29 @@ void Graphics::EndFrame() {
 	return;
 }
 
+Graphics::ScreenPoint Graphics::conv_points(const float x, const float y) noexcept {
+	D2D1_SIZE_F ScreenDim = ptrD2DDeviceContext->GetSize();
+	return { x + ScreenDim.width / 2.0f, -1.0f * y + ScreenDim.height / 2.0f };
+}
 
-void Graphics::draw_circle(const float x, const float y, const float r) {
+D2D1::ColorF Graphics::get_color(const GFX::Color col) const noexcept {
+	switch (col) {
+	case GFX::Color::White:		return D2D1::ColorF::White;
+	case GFX::Color::Blue:		return D2D1::ColorF::Blue;
+	case GFX::Color::Green:		return D2D1::ColorF::Green;
+	case GFX::Color::Red:		return D2D1::ColorF::Red;
+	default:					return D2D1::ColorF::White;
+	}
+}
+
+void Graphics::draw_circle_impl(const ScreenPoint p, const float r, const GFX::Color cCircleColor) {
 	ID2D1SolidColorBrush* ptrBrush = nullptr;
-	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &ptrBrush);
+	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(get_color(cCircleColor), &ptrBrush);
 	if (ptrBrush == nullptr) {
 		CLM_EXCEPT_GFX_HR_INFO(hr);
 	}
 
-	D2D1_ELLIPSE circle = D2D1::Ellipse({ x, y }, r, r);
+	D2D1_ELLIPSE circle = D2D1::Ellipse({ p.get_x(), p.get_y() }, r, r);
 
 	ptrD2DDeviceContext->FillEllipse(circle, ptrBrush);
 
@@ -198,30 +212,15 @@ void Graphics::draw_circle(const float x, const float y, const float r) {
 	return;
 }
 
-void Graphics::draw_circle(const GFX::Circle c) {
+void Graphics::draw_square_impl(const ScreenPoint p, const float w, const GFX::Color cSquareColor) {
 	ID2D1SolidColorBrush* ptrBrush = nullptr;
-	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &ptrBrush);
-	if (ptrBrush == nullptr) {
-		CLM_EXCEPT_GFX_HR_INFO(hr);
-	}
-
-	D2D1_ELLIPSE circle = D2D1::Ellipse({ c.x, c.y }, c.r, c.r);
-
-	ptrD2DDeviceContext->FillEllipse(circle, ptrBrush);
-
-	ptrBrush->Release();
-	return;
-}
-
-void Graphics::draw_square(const float x, const float y, const float w) {
-	ID2D1SolidColorBrush* ptrBrush = nullptr;
-	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 1.0f), &ptrBrush);
+	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(get_color(cSquareColor), &ptrBrush);
 	if (ptrBrush == nullptr) {
 		CLM_EXCEPT_GFX_HR_INFO(hr);
 	}
 
 	const float fHalfW = w / 2;
-	D2D1_RECT_F sq = D2D1::RectF(x - fHalfW, y + fHalfW, x + fHalfW, y - fHalfW);
+	D2D1_RECT_F sq = D2D1::RectF(p.get_x() - fHalfW, p.get_y() + fHalfW, p.get_x() + fHalfW, p.get_y() - fHalfW);
 
 	ptrD2DDeviceContext->DrawRectangle(sq, ptrBrush, 2.0f);
 
@@ -229,42 +228,34 @@ void Graphics::draw_square(const float x, const float y, const float w) {
 	return;
 }
 
-void Graphics::draw_square(GFX::Circle c) {
-	draw_square(c.x, c.y, 2 * c.r);
+void Graphics::draw_circle(const GFX::Circle c, GFX::Color cCircleColor) {
+	draw_circle_impl(conv_points(c.x, c.y), c.r, cCircleColor);
 }
 
-void Graphics::draw_circle_with_grid(const GFX::Circle c, size_t nRes) {
-	draw_circle(c);
+void Graphics::draw_square(const float x, const float y, const float w, const GFX::Color cSquareColor) {
+	draw_square_impl(conv_points(x, y), w, cSquareColor);
+}
 
-	ID2D1SolidColorBrush* ptrBrushGreen = nullptr;
-	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 0.5f), &ptrBrushGreen);
-	if (ptrBrushGreen == nullptr) {
-		CLM_EXCEPT_GFX_HR_INFO(hr);
-	}
-	const float w = 2 * c.r / nRes;
-	const float rsq = c.r * c.r;
-	const Vec2D vStart = { c.x - c.r + w/2,c.y - c.r + w/2};
-	std::vector<Vec2D<float>> grid(static_cast<size_t>(nRes) * static_cast<size_t>(nRes));
-	for (size_t i = 0; i < nRes; i++) {
-		for (size_t j = 0; j < nRes; j++) {
-			const Vec2D<float> v = { vStart.get_x() + i * w - c.x, vStart.get_y() + j * w - c.y };
-			if (Vec2D<float>::magsq(v) < rsq) {
-				grid[i * nRes + j] = { v.get_x() + c.x, v.get_y() + c.y };
-			}
-		}
-	}
-	
-	for (const auto v : grid) {
-		draw_square(v.get_x(), v.get_y(), w);
-	}
+void Graphics::draw_bounding_square(GFX::Circle c, const GFX::Color cSquareColor) {
+	draw_square(c.x, c.y, 2 * c.r, cSquareColor);
+}
 
-	ptrBrushGreen->Release();
+void Graphics::draw_grid(const std::vector<Vec2D<float>>& g, const float fCellWidth, const GFX::Color cGridColor) {
+	for (const auto& v : g) {
+		draw_square(v.get_x(), v.get_y(), fCellWidth, cGridColor);
+	}
+}
+
+void Graphics::draw_circle_with_grid(const GFX::Circle c, const std::vector<Vec2D<float>>& g, const float fCellWidth, const GFX::Color cCircleColor, const GFX::Color cGridColor) {
+	draw_circle(c, cCircleColor);
+	draw_grid(g, fCellWidth, cGridColor);
+
 	return;
 }
 
-void Graphics::draw_line(float x1, float y1, float x2, float y2) {
+void Graphics::draw_line(float x1, float y1, float x2, float y2, const GFX::Color cLineColor) {
 	ID2D1SolidColorBrush* ptrBrush = nullptr;
-	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &ptrBrush);
+	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(get_color(cLineColor), &ptrBrush);
 	if (ptrBrush == nullptr) {
 		CLM_EXCEPT_GFX_HR_INFO(hr);
 	}
