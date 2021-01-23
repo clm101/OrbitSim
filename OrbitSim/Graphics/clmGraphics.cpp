@@ -240,13 +240,13 @@ void Graphics::draw_bounding_square(GFX::Circle c, const GFX::Color cSquareColor
 	draw_square(c.x, c.y, 2 * c.r, cSquareColor);
 }
 
-void Graphics::draw_grid(const std::vector<Vec2D<float>>& g, const float fCellWidth, const GFX::Color cGridColor) {
+void Graphics::draw_grid(const std::vector<Vec2D>& g, const float fCellWidth, const GFX::Color cGridColor) {
 	for (const auto& v : g) {
 		draw_square(v.get_x(), v.get_y(), fCellWidth, cGridColor);
 	}
 }
 
-void Graphics::draw_circle_with_grid(const GFX::Circle c, const std::vector<Vec2D<float>>& g, const float fCellWidth, const GFX::Color cCircleColor, const GFX::Color cGridColor) {
+void Graphics::draw_circle_with_grid(const GFX::Circle c, const std::vector<Vec2D>& g, const float fCellWidth, const GFX::Color cCircleColor, const GFX::Color cGridColor) {
 	draw_circle(c, cCircleColor);
 	draw_grid(g, fCellWidth, cGridColor);
 

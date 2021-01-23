@@ -15,7 +15,7 @@
 #include "../ExceptionBase.h"
 #include "../DebugDefines/GraphicsDebugDefines.h"
 #include "../DebugDefines/MemoryDebug.h"
-#include "../VectorMath.h"
+#include "../MathVector.h"
 
 namespace mswrl = Microsoft::WRL;
 
@@ -116,9 +116,9 @@ public:
 	void draw_square(const float, const float, const float, const GFX::Color = GFX::Color::Green);
 	void draw_bounding_square(const GFX::Circle, const GFX::Color = GFX::Color::Green);
 
-	void draw_grid(const std::vector<Vec2D<float>>&, const float, const GFX::Color = GFX::Color::Green);
+	void draw_grid(const std::vector<Vec2D>&, const float, const GFX::Color = GFX::Color::Green);
 
-	void draw_circle_with_grid(const GFX::Circle, const std::vector<Vec2D<float>>&, const float, const GFX::Color = GFX::Color::White, const GFX::Color = GFX::Color::Green);
+	void draw_circle_with_grid(const GFX::Circle, const std::vector<Vec2D>&, const float, const GFX::Color = GFX::Color::White, const GFX::Color = GFX::Color::Green);
 
 	void draw_line(float, float, float, float, const GFX::Color = GFX::Color::Red);
 };

@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "VectorMath.h"
+#include "MathVector.h"
 
 #ifndef ORBITSIM_H
 #define ORBITSIM_H
@@ -9,12 +9,12 @@ class Body {
 private:
 	float fMass;
 
-	Vec2D<T> v2Pos;
-	Vec2D<T> v2Vel;
+	math::Vector<T> v2Pos;
+	math::Vector<T> v2Vel;
 
 	float fRadius;
 public:
-	Body(float fMass_in = 0.0f, Vec2D<T> v2Pos_in = {}, Vec2D<T> v2Vel_in = {}, float fRadius_in = 0.0f) {
+	Body(float fMass_in = 0.0f, math::Vector<T> v2Pos_in = {}, math::Vector<T> v2Vel_in = {}, float fRadius_in = 0.0f) {
 		fMass = fMass_in;
 		v2Pos = v2Pos_in;
 		v2Vel = v2Vel_in;
@@ -32,15 +32,15 @@ public:
 	Body& operator=(Body&&) noexcept = default;
 	Body& operator=(const Body&) = default;
 
-	const Vec2D<T>& get_pos() const { return v2Pos; }
-	const Vec2D<T>& get_vel() const { return v2Vel; }
+	const math::Vector<T>& get_pos() const { return v2Pos; }
+	const math::Vector<T>& get_vel() const { return v2Vel; }
 	T get_radius() const { return fRadius; }
 	T get_mass() const { return fMass; }
 
-	void set_pos(Vec2D<T> v2Pos_in) {
+	void set_pos(math::Vector<T> v2Pos_in) {
 		v2Pos = v2Pos_in;
 	}
-	void set_vel(Vec2D<T> v2Vel_in) {
+	void set_vel(math::Vector<T> v2Vel_in) {
 		v2Vel = v2Vel_in;
 	}
 	
@@ -56,7 +56,7 @@ private:
 	Body<float> b3;
 
 	const size_t nRes = 10u;
-	std::vector<Vec2D<float>> vGrid;
+	std::vector<Vec2D> vGrid;
 public:
 	OrbitSim(const wchar_t*, short, short);
 	OrbitSim(const Application&) = delete;
