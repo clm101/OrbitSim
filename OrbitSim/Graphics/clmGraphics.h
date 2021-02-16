@@ -78,7 +78,7 @@ private:
 	};
 
 	D2D1::ColorF get_color(const GFX::Color) const noexcept;
-	void draw_circle_impl(const ScreenPoint, const float, const GFX::Color = GFX::Color::White);
+	void draw_circle_impl(const Point2D_F, const float, const GFX::Color = GFX::Color::White) const;
 	void draw_square_impl(const ScreenPoint, const float, const GFX::Color = GFX::Color::Green);
 public:
 	class GFXExceptionBase : public ExceptionBase {
@@ -110,17 +110,18 @@ public:
 
 	//void conv_points(float&, float&) noexcept;
 
+	Vec2D_F get_screen_size() const;
 	
-	void draw_circle(const GFX::Circle, const GFX::Color = GFX::Color::White);
+	void draw_circle(const GFX::Circle, const GFX::Color = GFX::Color::White) const;
 
 	void draw_square(const float, const float, const float, const GFX::Color = GFX::Color::Green);
 	void draw_bounding_square(const GFX::Circle, const GFX::Color = GFX::Color::Green);
 
-	void draw_grid(const std::vector<Vec2D>&, const float, const GFX::Color = GFX::Color::Green);
+	void draw_grid(const std::vector<Vec2D_F>&, const float, const GFX::Color = GFX::Color::Green);
 
-	void draw_circle_with_grid(const GFX::Circle, const std::vector<Vec2D>&, const float, const GFX::Color = GFX::Color::White, const GFX::Color = GFX::Color::Green);
+	void draw_circle_with_grid(const GFX::Circle, const std::vector<Vec2D_F>&, const float, const GFX::Color = GFX::Color::White, const GFX::Color = GFX::Color::Green);
 
-	void draw_line(float, float, float, float, const GFX::Color = GFX::Color::Red);
+	void draw_line(float, float, float, float, const GFX::Color = GFX::Color::Red) const;
 };
 
 template<class T>

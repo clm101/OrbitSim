@@ -197,7 +197,7 @@ D2D1::ColorF Graphics::get_color(const GFX::Color col) const noexcept {
 	}
 }
 
-void Graphics::draw_circle_impl(const ScreenPoint p, const float r, const GFX::Color cCircleColor) {
+void Graphics::draw_circle_impl(const Point2D_F p, const float r, const GFX::Color cCircleColor) const {
 	ID2D1SolidColorBrush* ptrBrush = nullptr;
 	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(get_color(cCircleColor), &ptrBrush);
 	if (ptrBrush == nullptr) {
@@ -228,8 +228,13 @@ void Graphics::draw_square_impl(const ScreenPoint p, const float w, const GFX::C
 	return;
 }
 
-void Graphics::draw_circle(const GFX::Circle c, GFX::Color cCircleColor) {
-	draw_circle_impl(conv_points(c.x, c.y), c.r, cCircleColor);
+Vec2D_F Graphics::get_screen_size() const {
+	D2D1_SIZE_F ScreenDim = ptrD2DDeviceContext->GetSize();
+	return{ ScreenDim.width, ScreenDim.height };
+}
+
+void Graphics::draw_circle(const GFX::Circle c, GFX::Color cCircleColor) const {
+	draw_circle_impl({ c.x, c.y }, c.r, cCircleColor);
 }
 
 void Graphics::draw_square(const float x, const float y, const float w, const GFX::Color cSquareColor) {
@@ -240,20 +245,20 @@ void Graphics::draw_bounding_square(GFX::Circle c, const GFX::Color cSquareColor
 	draw_square(c.x, c.y, 2 * c.r, cSquareColor);
 }
 
-void Graphics::draw_grid(const std::vector<Vec2D>& g, const float fCellWidth, const GFX::Color cGridColor) {
+void Graphics::draw_grid(const std::vector<Vec2D_F>& g, const float fCellWidth, const GFX::Color cGridColor) {
 	for (const auto& v : g) {
 		draw_square(v.get_x(), v.get_y(), fCellWidth, cGridColor);
 	}
 }
 
-void Graphics::draw_circle_with_grid(const GFX::Circle c, const std::vector<Vec2D>& g, const float fCellWidth, const GFX::Color cCircleColor, const GFX::Color cGridColor) {
+void Graphics::draw_circle_with_grid(const GFX::Circle c, const std::vector<Vec2D_F>& g, const float fCellWidth, const GFX::Color cCircleColor, const GFX::Color cGridColor) {
 	draw_circle(c, cCircleColor);
 	draw_grid(g, fCellWidth, cGridColor);
 
 	return;
 }
 
-void Graphics::draw_line(float x1, float y1, float x2, float y2, const GFX::Color cLineColor) {
+void Graphics::draw_line(float x1, float y1, float x2, float y2, const GFX::Color cLineColor) const {
 	ID2D1SolidColorBrush* ptrBrush = nullptr;
 	HRESULT hr = ptrD2DDeviceContext->CreateSolidColorBrush(get_color(cLineColor), &ptrBrush);
 	if (ptrBrush == nullptr) {

@@ -56,32 +56,71 @@ namespace math {
 
 		template<typename U>
 		static constexpr Vector<T, dim> operator_impl(Vector<T, dim>& v1, const Vector<T, dim>& v2, U oper) {
-			Vector<T, dim> ret{};
 			for (size_t i = 0; i < dim; i++) {
-				ret.components[i] = oper(v1.components[i], v2.components[i]);
+				oper(v1.components[i], v2.components[i]);
 			}
-			return ret;
+			return { v1 };
 		}
 
 		template<typename U>
 		static constexpr Vector<T, dim> operator_impl(Vector<T, dim>& v1, const T& t, U oper) {
-			Vector<T, dim> ret{};
 			for (size_t i = 0; i < dim; i++) {
-				ret.components[i] = oper(v1.components[i], t);
+				oper(v1.components[i], t);
 			}
-			return ret;
+			return { v1 };
 		}
 
 	public:
-		//constexpr Vector() { }
-		constexpr Vector(const float x = 0.0f, const float y = 0.0f) {
+		constexpr Vector() {
+			for (T& e : components) {
+				e = static_cast<T>(0);
+			}
+		}
+		constexpr Vector(const float x, const float y) {
 			components[0] = x;
 			components[1] = y;
 		}
-		constexpr Vector<T,dim> operator=(const Vector<T,dim>& v) { this->components[0] = v.components[0]; this->components[1] = v.components[1]; return *this; }
+		constexpr Vector(const float x, const float y, const float z) {
+			components[0] = x;
+			components[1] = y;
+			components[2] = z;
+		}
+		constexpr Vector(const Vector& v) {
+			for (size_t i = 0; i < dim; i++) {
+				this->components[i] = v.components[i];
+			}
+		}
+		constexpr Vector(Vector&& v) noexcept {
+			for (size_t i = 0; i < dim; i++) {
+				this->components[i] = v.components[i];
+				v.components[i] = 0;
+			}
+		}
+		~Vector() {
+			for (T& e : components) {
+				e = static_cast<T>(0);
+			}
+		}
+		constexpr const Vector<T, dim>& operator=(const Vector<T, dim>& v) {
+			for (size_t i = 0; i < dim; i++) {
+				this->components[i] = v.components[i];
+			}
+			return *this;
+		}
+		constexpr const Vector<T, dim>& operator=(Vector<T, dim>&& v) noexcept {
+			for (size_t i = 0; i < dim; i++) {
+				this->components[i] = v.components[i];
+				v.components[i] = 0;
+			}
+			return *this;
+		}
 
-		T get_x() const { return components[0]; }
-		T get_y() const { return components[1]; }
+		constexpr T get_x() const { return components[0]; }
+		constexpr T get_y() const { return components[1]; }
+		constexpr T get_z() const requires (dim == 3) {
+			//static_assert(dim == 3, "Attempting to access third component of a two component vector");
+			return components[2];
+		}
 
 		constexpr Vector<T,dim> operator+(const Vector<T, dim>& rhs) const {
 			return operator_impl_const(*this, rhs, std::plus<T>{});
@@ -106,8 +145,8 @@ namespace math {
 		constexpr Vector<T,dim> operator*(T t) const {
 			return operator_impl_const(*this, t, std::multiplies<T>{});
 		}
-		friend constexpr Vector<T,dim> operator*(T t, Vector<T,dim> v) {
-			return operator_impl(v, t, std::multiplies<T>{});
+		friend constexpr Vector<T,dim> operator*(T t, const Vector<T,dim>& v) {
+			return operator_impl_const(v, t, std::multiplies<T>{});
 		}
 		constexpr Vector<T,dim> operator/(T t) const {
 			return operator_impl_const(*this, t, std::divides<T>{});
@@ -117,21 +156,47 @@ namespace math {
 			return (oss << L"<" << v.get_x() << L", " << v.get_y() << L">");
 		}
 
-		static constexpr T dot(Vector<T,dim> v1, Vector<T,dim> v2) {
-			T ret{};
+		static constexpr T dot(const Vector<T,dim>& v1, const Vector<T,dim>& v2) {
+			T ret = 0;
 			for (size_t i = 0; i < dim; i++) {
 				ret += (v1.components[i] * v2.components[i]);
 			}
 			return ret;
 		}
 
-		static constexpr T magsq(Vector<T,dim> v) {
+		static constexpr T magsq(const Vector<T,dim>& v) {
 			return dot(v, v);
+		}
+
+		static constexpr T mag(const Vector<T, dim>& v) {
+			return sqrt(magsq(v));
+		}
+
+		static constexpr T magsq(const Vector<T, dim>& v1, const Vector<T, dim>& v2) {
+			return magsq(v2 - v1);
+		}
+
+		static constexpr T mag(const Vector<T, dim>& v1, const Vector<T, dim>& v2) {
+			return sqrt(magsq(v1, v2));
+		}
+
+		static constexpr Vector<T, dim> get_unit(const Vector<T, dim>& v1, const Vector<T, dim>& v2) {
+			// From v1 to v2
+			Vector<T, dim> vRet = v2 - v1;
+			const float vRetMag = mag(vRet);
+			vRet /= vRetMag;
+			return vRet;
 		}
 	};
 }
 
-typedef math::Vector<> Point2D;
-typedef math::Vector<> Vec2D;
+typedef math::Vector<float, 2> Point2D_F;
+typedef math::Vector<float, 2> Vec2D_F;
+typedef math::Vector<double, 2> Point2D_D;
+typedef math::Vector<double, 2> Vec2D_D;
+typedef math::Vector<float, 3> Point3D_F;
+typedef math::Vector<float, 3> Vec3D_F;
+typedef math::Vector<double, 3> Point3D_D;
+typedef math::Vector<double, 3> Vec3D_D;
 
 #endif
