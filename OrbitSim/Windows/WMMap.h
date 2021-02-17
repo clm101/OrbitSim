@@ -8,14 +8,16 @@
 
 #define REGISTER_MESSAGE(msg) {msg, L#msg}
 
-class WindowsMessages {
-private:
-	std::unordered_map<DWORD, std::wstring> umMessages;
-public:
-	WindowsMessages() noexcept;
-	~WindowsMessages() noexcept;
+namespace clm {
+	class WindowsMessages {
+	private:
+		std::unordered_map<DWORD, std::wstring> umMessages;
+	public:
+		WindowsMessages() noexcept;
+		~WindowsMessages() noexcept;
 
-	std::wstring operator()(DWORD, WPARAM, LPARAM) const noexcept;
-};
+		std::wstring operator()(DWORD, WPARAM, LPARAM) const noexcept;
+	};
+}
 
 #endif

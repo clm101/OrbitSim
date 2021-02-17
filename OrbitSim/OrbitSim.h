@@ -1,5 +1,9 @@
 #include "Application.h"
 #include "MathVector.h"
+#include <numbers>
+#include <random>
+
+#include "Graph.h"
 
 #ifndef ORBITSIM_H
 #define ORBITSIM_H
@@ -9,15 +13,15 @@ class Body {
 private:
 	float fMass;
 
-	math::Vector<T> v2Pos;
-	math::Vector<T> v2Vel;
+	clm::math::Vector<T> v2Pos;
+	clm::math::Vector<T> v2Vel;
 
 	float fRadius;
 
 public:
 	bool bStationary;
 
-	Body(float fMass_in = 0.0f, math::Vector<T> v2Pos_in = {}, math::Vector<T> v2Vel_in = {}, float fRadius_in = 0.0f, bool bStationary_in = false) {
+	Body(float fMass_in = 0.0f, clm::math::Vector<T> v2Pos_in = {}, clm::math::Vector<T> v2Vel_in = {}, float fRadius_in = 0.0f, bool bStationary_in = false) {
 		fMass = fMass_in;
 		v2Pos = v2Pos_in;
 		v2Vel = v2Vel_in;
@@ -37,19 +41,31 @@ public:
 	Body& operator=(Body&&) noexcept = default;
 	Body& operator=(const Body&) = default;
 
-	const math::Vector<T>& get_pos() const { return v2Pos; }
-	const math::Vector<T>& get_vel() const { return v2Vel; }
+	const clm::math::Vector<T>& get_pos() const { return v2Pos; }
+	const clm::math::Vector<T>& get_vel() const { return v2Vel; }
 	T get_radius() const { return fRadius; }
 	T get_mass() const { return fMass; }
 
-	void set_pos(math::Vector<T> v2Pos_in) {
+	void set_pos(clm::math::Vector<T> v2Pos_in) {
 		v2Pos = v2Pos_in;
 	}
-	void set_vel(math::Vector<T> v2Vel_in) {
+	void set_vel(clm::math::Vector<T> v2Vel_in) {
 		v2Vel = v2Vel_in;
 	}
-	
-	operator GFX::Circle() {
+	T sample_density(T r, T t) {
+		return fMass / (pow(fRadius, 2) * static_cast<T>(std::numbers::pi));
+	}
+	std::vector<T> sample_density(const std::vector<std::pair<T, T>>& pts) const {
+		std::vector<T> vRet;
+		vRet.reserve(pts.size());
+		
+		const T fDensity = fMass / (powf(fRadius, 2) * static_cast<T>(std::numbers::pi));
+		for (size_t i = 0; i < pts.size(); i++) {
+			vRet.push_back(fDensity);
+		}
+		return std::move(vRet);
+	}
+	operator clm::Geometry::Circle() {
 		return { v2Pos.get_x(), v2Pos.get_y(), fRadius };
 	}
 };
@@ -57,16 +73,18 @@ public:
 class Region {
 protected:
 	struct Dimensions {
-		Point2D_F top_left;
-		Point2D_F bot_right;
+		clm::math::Point2D_F top_left;
+		clm::math::Point2D_F bot_right;
 	} dim;
 
 public:
 	Region() : dim({}) {}
 	Region(float left, float top, float right, float bottom) : dim({ { left, top }, { right, bottom } }) {}
-	Region(Point2D_F top_left_in, Point2D_F bot_right_in) : dim({ top_left_in, bot_right_in }) {}
-	void update_dimensions(float, float, float, float);
-	virtual void draw(const Graphics&) const = 0;
+	Region(clm::math::Point2D_F top_left_in, clm::math::Point2D_F bot_right_in) : dim({ top_left_in, bot_right_in }) {}
+	virtual void update_dimensions(float, float, float, float);
+	inline clm::math::Point2D_F to_gfx_coordinates(const clm::math::Point2D_F&) const noexcept;
+	inline clm::Geometry::Rect to_gfx_coordinates(const clm::Geometry::Rect&) const noexcept;
+	virtual void draw(const clm::Graphics&) const = 0;
 };
 
 class OrbitSimRegion : public Region {
@@ -77,28 +95,29 @@ public:
 	std::vector<Body<float>> vElements;
 
 	const size_t nRes = 10u;
-	std::vector<Vec2D_F> vGrid;
+	std::vector<clm::math::Vec2D_F> vGrid;
 //public:
 	OrbitSimRegion() : Region() {}
 	OrbitSimRegion(float left, float top, float right, float bottom) : Region(left, top, right, bottom) {}
-	OrbitSimRegion(Point2D_F top_left_in, Point2D_F bot_right_in) : Region(top_left_in, bot_right_in) {}
+	OrbitSimRegion(clm::math::Point2D_F top_left_in, clm::math::Point2D_F bot_right_in) : Region(top_left_in, bot_right_in) {}
 
 	void add_body(const Body<float>& b) { vElements.emplace_back(b); }
 
-	void draw(const Graphics&) const override;
+	void draw(const clm::Graphics&) const override;
 };
 
 class GraphRegion : public Region {
+private:
+	clm::Graph gph;
 public:
-	std::vector<std::pair<float, float>> vDataPoints;
-	GraphRegion() : Region(), vDataPoints({}) {}
-	GraphRegion(float left, float top, float right, float bottom) : Region(left, top, right, bottom), vDataPoints({}) {}
+	GraphRegion() : Region(), gph({}) {}
+	GraphRegion(float left, float top, float right, float bottom) : Region(left, top, right, bottom), gph({left, top, right, bottom}) {}
 
-	void draw(const Graphics&) const override;
-	void add_energy_calc(float, float);
+	virtual void update_dimensions(float, float, float, float) override;
+	void draw(const clm::Graphics&) const override;
 };
 
-class OrbitSim : public Application {
+class OrbitSim : public clm::Application {
 private:
 	/*Body<float> main;
 	Body<float> b2;
@@ -108,7 +127,18 @@ private:
 	GraphRegion gr;
 
 	const size_t nRes = 10u;
-	std::vector<Vec2D_F> vGrid;
+	std::vector<clm::math::Vec2D_F> vGrid;
+
+	template<typename T = float>
+	class MonteCarloRNG {
+	public:
+		MonteCarloRNG() : rng({}) { rng.seed(0); }
+		~MonteCarloRNG() = default;
+		T operator()() { return static_cast<T>(rng()) / static_cast<T>(std::numeric_limits<unsigned int>::max()); }
+	private:
+		std::mt19937 rng;
+	};
+	MonteCarloRNG<> rng;
 public:
 	OrbitSim(const wchar_t*, short, short);
 	OrbitSim(const Application&) = delete;

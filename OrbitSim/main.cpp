@@ -1,6 +1,6 @@
 #include "Windows/WindowsInclude.h"
 #include <d3d11.h>
-#include "Windows/clmWinStuff.h"
+#include "Windows/WinStuff.h"
 #include "OrbitSim.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) {
@@ -9,7 +9,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		OrbitSim app(L"Test window", 1280, 720);
 		nRet = app.Start();
 	}
-	catch (ExceptionBase& e) {
+	catch (clm::ExceptionBase& e) {
 		MessageBoxA(nullptr, e.what(), e.getType(), MB_ICONEXCLAMATION | MB_OK | MB_SETFOREGROUND);
 	}
 	catch (std::exception& e) {

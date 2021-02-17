@@ -27,13 +27,7 @@
     <ClInclude Include="OrbitSim\DebugDefines\WinDebugDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OrbitSim\Graphics\clmGraphics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OrbitSim\Graphics\DxgiInfoManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OrbitSim\Windows\clmWinStuff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OrbitSim\Windows\Mouse.h">
@@ -48,12 +42,6 @@
     <ClInclude Include="OrbitSim\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OrbitSim\clmRandom.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OrbitSim\clmTimer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OrbitSim\ExceptionBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -66,11 +54,23 @@
     <ClInclude Include="OrbitSim\MathVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OrbitSim\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitSim\Random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitSim\Windows\WinStuff.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitSim\Graphics\Graphics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitSim\Graph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OrbitSim\Graphics\clmGraphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OrbitSim\Graphics\DxgiInfoManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -86,12 +86,6 @@
     <ClCompile Include="OrbitSim\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OrbitSim\clmRandom.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OrbitSim\clmTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OrbitSim\ExceptionBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -99,6 +93,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OrbitSim\OrbitSim.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitSim\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitSim\Random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitSim\Graphics\Graphics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitSim\Graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

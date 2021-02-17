@@ -20,29 +20,31 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrbitSim\Application.h" />
-    <ClInclude Include="OrbitSim\clmRandom.h" />
-    <ClInclude Include="OrbitSim\clmTimer.h" />
+    <ClInclude Include="OrbitSim\Graph.h" />
+    <ClInclude Include="OrbitSim\Random.h" />
+    <ClInclude Include="OrbitSim\Timer.h" />
     <ClInclude Include="OrbitSim\DebugDefines\BaseDebugDefines.h" />
     <ClInclude Include="OrbitSim\DebugDefines\GraphicsDebugDefines.h" />
     <ClInclude Include="OrbitSim\DebugDefines\MemoryDebug.h" />
     <ClInclude Include="OrbitSim\DebugDefines\WinDebugDefines.h" />
     <ClInclude Include="OrbitSim\ExceptionBase.h" />
-    <ClInclude Include="OrbitSim\Graphics\clmGraphics.h" />
+    <ClInclude Include="OrbitSim\Graphics\Graphics.h" />
     <ClInclude Include="OrbitSim\Graphics\DxgiInfoManager.h" />
     <ClInclude Include="OrbitSim\MathVector.h" />
     <ClInclude Include="OrbitSim\OrbitSim.h" />
     <ClInclude Include="OrbitSim\VectorMath.h" />
-    <ClInclude Include="OrbitSim\Windows\clmWinStuff.h" />
+    <ClInclude Include="OrbitSim\Windows\WinStuff.h" />
     <ClInclude Include="OrbitSim\Windows\Mouse.h" />
     <ClInclude Include="OrbitSim\Windows\WindowsInclude.h" />
     <ClInclude Include="OrbitSim\Windows\WMMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OrbitSim\Application.cpp" />
-    <ClCompile Include="OrbitSim\clmRandom.cpp" />
-    <ClCompile Include="OrbitSim\clmTimer.cpp" />
+    <ClCompile Include="OrbitSim\Graph.cpp" />
+    <ClCompile Include="OrbitSim\Random.cpp" />
+    <ClCompile Include="OrbitSim\Timer.cpp" />
     <ClCompile Include="OrbitSim\ExceptionBase.cpp" />
-    <ClCompile Include="OrbitSim\Graphics\clmGraphics.cpp" />
+    <ClCompile Include="OrbitSim\Graphics\Graphics.cpp" />
     <ClCompile Include="OrbitSim\Graphics\DxgiInfoManager.cpp" />
     <ClCompile Include="OrbitSim\main.cpp" />
     <ClCompile Include="OrbitSim\OrbitSim.cpp" />
@@ -167,7 +169,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxgi.lib;dxguid.lib;d3dcompiler.lib;d3d11.lib;d2d1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxgi.lib;dxguid.lib;d3dcompiler.lib;d3d11.lib;d2d1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -187,7 +189,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxgi.lib;dxguid.lib;d3dcompiler.lib;d3d11.lib;d2d1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxgi.lib;dxguid.lib;d3dcompiler.lib;d3d11.lib;d2d1.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
